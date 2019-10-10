@@ -1,5 +1,7 @@
 .DS_Store
 .api_history
+.idea
+.pytest_cache
 *.tmp
 *.swp
 *.swo

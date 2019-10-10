@@ -5,7 +5,7 @@
 	excludesfile = ~/.gitignore
 [user]
 	name = Andrey \"Zed\" Zaikin
-	email = zed.0xff@gmail.com
+	email = zed-0xff@yandex-team.ru
 [config]
 	ui = always
 
@@ -29,6 +29,7 @@
 	untracked = cyan
 
 [alias]
+	sh = show
 	st = status
 	ci = commit
 	br = branch

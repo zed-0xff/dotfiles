@@ -1,6 +1,8 @@
 set nocompatible               " Use Vim settings, rather then Vi settings (much better!)
 filetype off                   " required for Vundle
 
+let g:go_version_warning = 0
+
 " Vundle init begin https://github.com/VundleVim/Vundle.vim
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -11,6 +13,9 @@ Plugin 'tpope/vim-endwise'
 Plugin 'dareg/vim-cpp'
 "Plugin 'chase/vim-ansible-yaml'
 Plugin 'avakhov/vim-yaml'
+Plugin 'fatih/vim-go'
+"Plugin 'Valloric/YouCompleteMe'
+Plugin 'Glench/Vim-Jinja2-Syntax'
 call vundle#end()              " required
 filetype plugin indent on      " required
 " Vundle init end
@@ -22,6 +27,7 @@ set laststatus=2               " show current buffer filename in status line
 set ruler		       " show cursor position
 set hidden                     " keep unsaved data in background buffers
 set textwidth=0                " disable auto wrap
+set expandtab
 
 syntax on                      " Enable syntax highlighting
 filetype on                    " Enable filetype detection
@@ -30,6 +36,9 @@ filetype plugin on             " Enable filetype-specific plugins
 compiler ruby                  " Enable compiler support for ruby
 
 hi Search cterm=NONE ctermfg=black ctermbg=yellow
+
+" let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf=0
 
 " BufExplorer on Ctrl+B
 map <C-b> :BufExplorer<cr>
@@ -50,6 +59,9 @@ autocmd BufReadPost *
 \     endif |
 \ endif
 
+" YCM
+nmap <C-]> :YcmCompleter GoTo<cr>
+
 " allow commands input in russian
 "set langmap=йq,цw,уe,кr,еt,нy,гu,шi,щo,зp,х[,ъ],фa,ыs,вd,аf,пg,рh,оj,лk,дl,ж\\;,э',яz,чx,сc,мv,иb,тn,ьm,б\\,,ю.,ё`,ЙQ,ЦW,УE,КR,ЕT,НY,ГU,ШI,ЩO,ЗP,Х{,Ъ},ФA,ЫS,ВD,АF,ПG,РH,ОJ,ЛK,ДL,Ж:,Э\\",ЯZ,ЧX,СC,МV,ИB,ТN,ЬM,Б<,Ю>,Ё~
 
@@ -63,7 +75,6 @@ au BufRead,BufNewFile *.rb set ts=2 sw=2 expandtab
 au BufRead,BufNewFile *.txt set textwidth=0
 au BufRead,BufNewFile *.pp set ft=ruby                      " puppet
 au BufRead,BufNewFile Capfile set ft=ruby                   " capistrano
-au BufRead,BufNewFile *.py set sw=4 ts=4 expandtab
 
 " strip excess whitespace on save
 "au BufWritePre *.rb :%s/\s\+$//e
@@ -75,10 +86,9 @@ au BufRead,BufNewFile *.cpp,*.hpp,*.h,*.inc,*.cc,*.cmake,CMakeLists.txt set ts=4
 au BufRead,BufNewFile ~/adfox/sourc*/*.lua set ts=4 sw=4 expandtab
 au BufRead,BufNewFile ~/adfox/sourc*/*.inc set filetype=cpp indentexpr=
 au BufRead,BufNewFile *.cql set syntax=sql ts=4 sw=4 expandtab
-au BufRead,BufNewFile *.pp  set ts=4 sw=4 expandtab
-au BufRead,BufNewFile *.php set ts=4 sw=4 expandtab
-au BufRead,BufNewFile *.go  set ts=4 sw=4 expandtab syntax=c
-au BufRead,BufNewFile *Dockerfile*     set ts=4 sw=4 expandtab
+au BufRead,BufNewFile *.php,*.pp,*.sh,*Dockerfile*,*.py set ts=4 sw=4 expandtab
+au BufRead,BufNewFile *.go  set ts=4 sw=4 expandtab syntax=go
+au BufRead,BufNewFile *.sls set syntax=jinja
 
 "au BufRead,BufNewFile ~/adfox/sourc*/* set ts=4 sw=4 expandtab tags=tags,../tags cino=f1s{1s(4
 "au BufRead,BufNewFile ~/sourc*/*       set ts=4 sw=4 expandtab tags=tags,../tags cino=f1s{1s(4
