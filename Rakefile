@@ -86,7 +86,12 @@ def process_dir dir
         target.make_symlink src
       end
     elsif target.symlink?
-      puts "[?] #{target} is a symlink to #{target.radlink}".yellow if target.readlink != src
+      puts "[?] #{target} is a symlink to #{target.readlink}".yellow if target.readlink != src
+      if ENV['FORCE'] == '1'
+        target.delete
+        puts "[.] symlink #{target} -> #{src}"
+        target.make_symlink src.relative_path_from(target.dirname)
+      end
     else
       # not exists and not a directory
       puts "[.] symlink #{target} -> #{src}"
