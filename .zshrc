@@ -1,134 +1,101 @@
-fpath=($HOME/.zsh/zsh-completions $fpath)
-
-autoload -U compinit promptinit
-compinit
-promptinit;
-
-zstyle ':completion::complete:*' use-cache 1
-
-setopt prompt_subst
-
-autoload colors zsh/terminfo
-if [[ "$TERM_PROGRAM" == "DTerm" ]]; then
-	PR_COLOR=
-	PR_NOCOLOR=
-else
-	if [[ "$terminfo[colors]" -ge 8 ]]; then
-		colors
-	fi
-
-	for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-		eval PR_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
-		eval PR_LIGHT_$color='%{$fg[${(L)color}]%}'
-		(( count = $count + 1 ))
-	done
-	PR_NOCOLOR="%{$terminfo[sgr0]%}"
-
-	if [[ "$USER" == "root" ]]; then
-		PR_COLOR=$PR_RED
-	elif [[ -f "$HOME/.zgreen" ]]; then
-		PR_COLOR=$PR_LIGHT_GREEN
-	else
-		PR_COLOR=$PR_YELLOW
-	fi
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-case $TERM in
-    xterm*)
-	preexec () {print -Pn "\e]0;%n@%m: *$1\a"}
-        precmd () {print -Pn "\e]0;%n@%m: %c\a"}
-        ;;
-esac
 
-PROMPT="${PR_COLOR}[%n@%m %c]#${PR_NOCOLOR}"
-#PROMPT="${PR_COLOR}[%n@mac %c]#${PR_NOCOLOR}"
-HISTFILE=~/.zhistory
-HISTSIZE=5120
-SAVEHIST=$HISTSIZE
-DIRSTACKSIZE=20
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+PATH=$HOME/bin:$PATH
+PATH=$PATH:$HOME/.rvm/bin                 # rvm
+PATH=$PATH:$HOME/go/bin                   # go
+PATH=$PATH:$HOME/.local/bin               # pip --user
+#PATH=$PATH:/home/linuxbrew/.linuxbrew/bin # aws-vault
+PATH=$PATH:$HOME/.gem/ruby/2.5.0/bin      # rubygems
 
-setopt  APPEND_HISTORY
-setopt  HIST_IGNORE_ALL_DUPS
-setopt  HIST_IGNORE_SPACE
-setopt  HIST_REDUCE_BLANKS
-setopt  No_Beep
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
 
-export EDITOR=vim
-export PAGER=less
-export CLICOLOR=1
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+#ZSH_THEME="agnoster"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# up & down
-bindkey "^[[A" history-search-backward
-bindkey "^[[B" history-search-forward
-# home & end
-bindkey "^[[1~" beginning-of-line
-bindkey "^[[4~" end-of-line
+# not show username@host in prompt for this user
+DEFAULT_USER="zed"
 
-LANG=en_US.UTF-8
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
 
-###############################################################################
-### OS-specific tweaks
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
 
-case `uname` in
-    Linux)
-	alias ls="ls --color=auto"
-	alias iptl="iptables -n -v -L"
-	export LESS="-R -M --shift 5"
-        ;;
-    FreeBSD)
-	LANG=C
-	LC_MESSAGES=C
-	#alias ipfw="sudo ipfw"
-	#alias pfctl="sudo pfctl"
-        ;;
-    Darwin)
-	# OSX specific
-	setopt no_ignore_eof
-	setopt no_correct_all
-	export LESS="-R"
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
 
-	export PERL_MB_OPT="--install_base \"$HOME/perl5\""
-	export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"
-        ;;
-esac
+# Uncomment the following line to automatically update without prompting.
+DISABLE_UPDATE_PROMPT="true"
 
-###############################################################################
-### common aliases
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS=true
 
-alias ll="ls -alF"
-alias vi=vim
-#alias tcpdump="sudo tcpdump"
-#alias trafshow="sudo trafshow"
-#alias arping="sudo arping"
-#alias ping="sudo ping"
-alias grep="grep --color"
-#alias pingp="sudo ping -s 1470 -i 0.02 -c 256"
-alias tm="tail /var/log/messages"
-alias tmf="tail -f /var/log/messages"
-#alias pp="sudo ping -s 1470 -i 0.02 -c 256"
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
 
-# strip ANSI escapes
-alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
 
-# openvz
-alias vzl="vzlist -ao ctid,status,name,ip | sed 's/^.*running.*$/\x1b[32m\0\x1b(B\x1b[m/'"
-alias vzl2="vzlist -ao ctid,status,name,hostname | sed 's/^.*running.*$/\x1b[32m\0\x1b(B\x1b[m/'"
-alias vzenter="vzctl enter"
+# Uncomment the following line to display red dots whilst waiting for completion.
+COMPLETION_WAITING_DOTS="true"
 
-alias spec=rspec
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-alias m="mosh -6 -A"
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
 
-###############################################################################
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
 
-export PATH="${HOME}/bin:/usr/local/bin:${PATH}:/usr/sbin:/usr/local/sbin:$HOME/android/sdk/tools:$HOME/android/sdk/platform-tools"
-export PATH="${PATH}:/opt/local/bin:${HOME}/.gem/ruby/2.0.0/bin"
+# Which plugins would you like to load?
+# Standard plugins can be found in ~/.oh-my-zsh/plugins/*
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+	git
+	aws
+	terraform
+)
 
-# https://gist.github.com/4136373
-#export RUBY_GC_MALLOC_LIMIT=60000000
-#export RUBY_FREE_MIN=200000
+source $ZSH/oh-my-zsh.sh
 
-[[ -s "$HOME/.ec2/keys.sh" ]] && . "$HOME/.ec2/keys.sh" 
+# User configuration
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+if [[ -o interactive ]]; then
+	if [ -f /var/log/messages ]; then
+		tail /var/log/messages
+	fi
+#	eval `ssh-agent`
+        ssh-add -q ~/bolt/*.pem ~/.ssh/id_rsa
+fi
 
-GREP_OPTIONS="--exclude-dir .git"
+# terraform autocompletion self-added
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/terraform terraform
+
+#PROMPT=${PROMPT}$'%{$fg[white]%}$(tf_prompt_info)%{$reset_color%} '
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
